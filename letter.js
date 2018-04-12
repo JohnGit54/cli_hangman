@@ -4,6 +4,7 @@ var Letter = function (gameLetter) {
     this.gameLetter = gameLetter.toUpperCase();
     this.wasGuessed = false;
 
+
     //1) display underlying character or blank placeholdr    
     this.toString = function () {
         // if space in between words 

@@ -37,7 +37,12 @@ function playGame() {
         //console.log(" playGame function answer", answers.input);
         _Word.guessLetter(answers.input);
         _Word.getLetterDisplay();
-        guessCnt--;
+        
+        if (!_Word.wasGoodGuess){
+            --guessCnt;
+        }
+        console.log("Guesses remaining" , guessCnt);
+
 
         if (guessCnt <= 0) {
             console.log('Sorry - you lost');

@@ -8,6 +8,9 @@ var Word = function (hangmanWord) {
 
     this.hangWord = hangmanWord.toUpperCase();
 
+    this.holdFalseCounts = 0;
+    this.wasGoodGuess = false;
+
     //array of Letter contructors
     var Letters = [];
 
@@ -16,13 +19,21 @@ var Word = function (hangmanWord) {
         //console.log(" in word . getLetterDisplay");
         var _finished = true;
         var str = "";
+        var cntNotFound = 0;
         for (let i = 0; i < Letters.length; i++) {
             str += Letters[i].toString();
-            if (Letters[i].wasGuessed == false){
+            if (Letters[i].wasGuessed == false) {
                 _finished = false;
+                cntNotFound++;
             }
-
         }
+        this.wasGoodGuess = false;
+        //console.log("cntNotFound: ", cntNotFound, ' this.holdFalseCounts:', this.holdFalseCounts);
+        if (cntNotFound < this.holdFalseCounts) {
+            this.wasGoodGuess = true;
+            this.holdFalseCounts = cntNotFound;
+        }
+
         console.log(str);
         this.isWon = _finished;
     }
@@ -31,6 +42,7 @@ var Word = function (hangmanWord) {
         for (let i = 0; i < this.hangWord.length; i++) {
             const element = this.hangWord[i];
             Letters.push(new Letter(element));
+            this.holdFalseCounts++; // this will hold total num of unguessted leter
         }
     }
 
