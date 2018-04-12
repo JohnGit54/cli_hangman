@@ -1,10 +1,14 @@
-
 var Word = require('./word.js');
 var inquirer = require("inquirer");
 
 const START_COUNT = 10;
 var randomWordArr = ['yes', 'no', 'silly',
-    'nonsense', 'tired', 'pillow','auto'];
+    'nonsense', 'tired', 'pillow', 'auto',
+'Knights in White Satin',
+];
+
+var _Word;
+var guessCnt;
 
 function getRandom() {
     return Math.floor(Math.random() * randomWordArr.length);
@@ -14,69 +18,40 @@ function selectWord() {
 }
 
 
+function initialize() {
+    //create new Word object- send in starting 
+    // hangman word
+    _Word = new Word(selectWord());
+    _Word.setLetters();
+    _Word.getLetterDisplay();
+    guessCnt = START_COUNT;
+}
 
-function CliView() {
+function playGame() {
+    inquirer.prompt([{
+        name: "input",
+        message: 'Select Letter'
+    }]).then(function (answers) {
+        //console.log(" playGame function answer", answers.input);
+        _Word.guessLetter(answers.input);
+        _Word.getLetterDisplay();
+        //handleAnswer(answers.input);
+        guessCnt--;
+        //console.log( guessCnt,"bottom of function answer");
 
-    var self = this;
-    var word; //  variable for a new Word constructor
-    var guessCnt;
-
-    this.newGame = function () {
-        //starts the game by giving a word to WRD constructor
-        word = new Word(selectWord());
-        word.setLetters();
-        //console.log(word);
-        word.getLetterDisplay();
-        this.guessCnt = START_COUNT;
-    }
-
-     this.handleAnswer = function (inputLetter) {
-        console.log('CliView.handle answer letter guessed', inputLetter);
-        word.guessLetter(inputLetter);
-        word.getLetterDisplay();
-    }
-
-    this.startGame = function () {
-        var self = this;
-        inquirer.prompt([{
-            name: "start",
-            type: 'checkbox',
-            choices: ["NewGame", "Exit"],
-            message: "Do you want to start new game?"
+        if (guessCnt <= 0) {
+            console.log('Sorry - you lost');
+        } else if (_Word.isWon) {
+            console.log("You Won");
+        } else {
+            playGame();
         }
-        ]).then(answers => {
-            console.log(answers.start[0]);
-            if (answers.start[0] == 'Exit') {
-                console.log("GoodBye!")
-            } else {
-                 this.newGame();
-                //nest inquirere for user input guess/letter
 
-                inquirer.prompt([{
-                    name: "input",
-                    message: 'Select Letter'
-                }]).then(function (answers) {
-                    console.log("start of function answer" ,answers.input);
-                    self.handleAnswer(answers.input);
-                    console.log("bottom of function answer");                
-                })  
-    }
+    })
 
-});
-    }
 
 }
 
 
-
-
-//--test code --//
-
-x = new CliView();
-x.startGame();
-
-
-
-
-
-
+initialize();
+playGame();

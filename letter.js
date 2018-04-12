@@ -6,11 +6,17 @@ var Letter = function (gameLetter) {
 
     //1) display underlying character or blank placeholdr    
     this.toString = function () {
+        // if space in between words 
+        // make believe space wasGuessed all ready
+        if (gameLetter == ' ') {
+            this.wasGuessed = true;
+        }
+
         if (this.wasGuessed) {
-            console.log(this.gameLetter);
+            //console.log(this.gameLetter);
             return ' ' + gameLetter + ' ';
-        } else {
-            console.log(' - ');
+        } else {            
+            //console.log(' - ');
             return ' - ';
         }
     }
